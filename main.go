@@ -2,14 +2,17 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Server", "Go")
 	fmt.Println(r.URL.Path)
-	w.Write([]byte("Hello, World!"))
+	io.WriteString(w, "Hello world")
+	fmt.Fprint(w, "Hello world")
 }
 
 func snippetView(w http.ResponseWriter, r *http.Request) {
@@ -18,8 +21,7 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	msg := fmt.Sprintf("Displaying details of snippet with ID %d...", id)
-	w.Write([]byte(msg))
+	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
 }
 
 func snippetCreate(w http.ResponseWriter, r *http.Request) {
