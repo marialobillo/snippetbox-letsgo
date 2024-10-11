@@ -1,11 +1,15 @@
 package main
 
 import (
-    "log"
-    "net/http"
+	"flag"
+	"log"
+	"net/http"
 )
 
 func main() {
+	addr := flag.String("addr", ":3500", "HTTP network address")
+	flag.Parse()
+
     mux := http.NewServeMux()
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
@@ -16,8 +20,8 @@ func main() {
     mux.HandleFunc("GET /snippet/create", snippetCreate)
     mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
-    log.Print("starting server on :3500")
+    log.Printf("starting server on %s", *addr)
     
-    err := http.ListenAndServe(":3500", mux)
+    err := http.ListenAndServe(*addr, mux)
     log.Fatal(err)
 }
